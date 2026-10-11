@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Annapurna Daily Needs</title>
+<style id="st">
+:root{--bg:#f4f6f2;--cd:#fff;--tx:#1a1f1b;--mu:#6b756d;--bd:#e3e8e1;--g:#1f8a3b;--g2:#16692c;--or:#f59e0b;--tile:#eef7ef;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101311;--cd:#1b201c;--tx:#eef2ee;--mu:#9ba59d;--bd:#2b322c;--tile:#243026}}
+:root[data-theme="dark"]{--bg:#101311;--cd:#1b201c;--tx:#eef2ee;--mu:#9ba59d;--bd:#2b322c;--tile:#243026}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:90px}
+.hd{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;padding:calc(18px + env(safe-area-inset-top,0px)) 16px 18px}
+.w{max-width:720px;margin:auto}
+.hd h1{margin:0;font-size:22px}.hd p{margin:3px 0 12px;opacity:.9;font-size:13px}
+input,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--cd);color:var(--tx);font:inherit;margin-bottom:8px}
+.hd input{border:0;margin:0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;max-width:720px;margin:auto}
+.chip{flex:none;padding:7px 14px;border-radius:20px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);font-size:14px;cursor:pointer}
+.chip.on{background:var(--g);color:#fff;border-color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;max-width:720px;margin:auto}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:3px}
+.pic{background:var(--tile);border-radius:10px;height:84px;display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:4px}
+.pic{overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.th{width:34px;height:34px;border-radius:8px;object-fit:cover;vertical-align:middle}
+.hn{font-weight:500;color:var(--mu);font-size:13px}
+.nm{font-weight:600;font-size:14px;line-height:1.25}.mu{color:var(--mu);font-size:12px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.add{border:1.5px solid var(--g);color:var(--g);background:transparent;border-radius:8px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer}
+.qty{display:flex;align-items:center;gap:8px;background:var(--g);color:#fff;border-radius:8px;padding:2px 4px}
+.qty button{background:none;border:0;color:#fff;font-size:18px;width:26px;height:26px;cursor:pointer}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--cd);border-top:1px solid var(--bd);display:none}
+.bar button{width:100%;max-width:720px;display:flex;justify-content:space-between;margin:auto;background:var(--g);color:#fff;border:0;border-radius:12px;padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer}
+.fab{position:fixed;right:14px;bottom:80px;background:var(--or);color:#000;border:0;border-radius:24px;padding:10px 16px;font-weight:700;cursor:pointer;display:none;z-index:5}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet h2{margin:0 0 10px;font-size:18px;display:flex;justify-content:space-between}
+.x{background:none;border:0;color:var(--tx);font-size:22px;cursor:pointer}
+.ci{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}.ci .nm{flex:1}
+.go{width:100%;background:#25d366;color:#04210f;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;margin-top:6px}
+.sm{background:var(--g);color:#fff;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer}
+.del{background:none;border:0;color:#d33;font-size:18px;cursor:pointer}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.f2 input{margin:0}
+</style></head><body>
+<div id="root"></div>
+<script type="application/json" id="data">{"shop": "Annapurna Daily Needs", "wa": "919999999999", "items": [{"id": "v1", "n": "Potato", "u": "1 kg", "p": 30, "c": "Vegetables / सब्ज़ियाँ", "e": "🥔", "h": "आलू"}, {"id": "v2", "n": "Onion", "u": "1 kg", "p": 35, "c": "Vegetables / सब्ज़ियाँ", "e": "🧅", "h": "प्याज"}, {"id": "v3", "n": "Tomato", "u": "1 kg", "p": 40, "c": "Vegetables / सब्ज़ियाँ", "e": "🍅", "h": "टमाटर"}, {"id": "v4", "n": "Cauliflower", "u": "1 pc", "p": 30, "c": "Vegetables / सब्ज़ियाँ", "e": "🥦", "h": "गोभी"}, {"id": "v5", "n": "Spinach", "u": "1 bunch", "p": 15, "c": "Vegetables / सब्ज़ियाँ", "e": "🥬", "h": "पालक"}, {"id": "v6", "n": "Green Chilli", "u": "100 g", "p": 10, "c": "Vegetables / सब्ज़ियाँ", "e": "🌶️", "h": "हरी मिर्च"}, {"id": "v7", "n": "Garlic", "u": "100 g", "p": 25, "c": "Vegetables / सब्ज़ियाँ", "e": "🧄", "h": "लहसुन"}, {"id": "v8", "n": "Lemon", "u": "4 pc", "p": 10, "c": "Vegetables / सब्ज़ियाँ", "e": "🍋", "h": "नींबू"}, {"id": "i1", "n": "Aashirvaad Atta", "u": "5 kg", "p": 235, "c": "Atta & Rice / आटा-चावल", "e": "🌾", "h": "आशीर्वाद आटा"}, {"id": "i2", "n": "Basmati Rice", "u": "1 kg", "p": 110, "c": "Atta & Rice / आटा-चावल", "e": "🍚", "h": "बासमती चावल"}, {"id": "i3", "n": "Arhar Dal", "u": "1 kg", "p": 150, "c": "Pulses / दालें", "e": "🫘", "h": "अरहर दाल"}, {"id": "i4", "n": "Moong Dal", "u": "1 kg", "p": 130, "c": "Pulses / दालें", "e": "🫘", "h": "मूंग दाल"}, {"id": "i5", "n": "Chana Dal", "u": "1 kg", "p": 95, "c": "Pulses / दालें", "e": "🫘", "h": "चना दाल"}, {"id": "i6", "n": "Mustard Oil", "u": "1 L", "p": 155, "c": "Oil & Ghee / तेल-घी", "e": "🛢️", "h": "सरसों का तेल"}, {"id": "i7", "n": "Desi Ghee", "u": "500 ml", "p": 330, "c": "Oil & Ghee / तेल-घी", "e": "🧈", "h": "देसी घी"}, {"id": "i8", "n": "Turmeric Powder", "u": "100 g", "p": 28, "c": "Spices / मसाले", "e": "🟡", "h": "हल्दी पाउडर"}, {"id": "i9", "n": "Red Chilli Powder", "u": "100 g", "p": 40, "c": "Spices / मसाले", "e": "🌶️", "h": "लाल मिर्च पाउडर"}, {"id": "i10", "n": "Salt", "u": "1 kg", "p": 25, "c": "Spices / मसाले", "e": "🧂", "h": "नमक"}, {"id": "i11", "n": "Sugar", "u": "1 kg", "p": 46, "c": "Tea & Sugar / चाय-चीनी", "e": "🍬", "h": "चीनी"}, {"id": "i12", "n": "Tea Leaves", "u": "250 g", "p": 95, "c": "Tea & Sugar / चाय-चीनी", "e": "🍵", "h": "चाय पत्ती"}, {"id": "i13", "n": "Biscuit", "u": "1 pack", "p": 10, "c": "Snacks / नाश्ता", "e": "🍪", "h": "बिस्किट"}, {"id": "i14", "n": "Noodles", "u": "70 g", "p": 14, "c": "Snacks / नाश्ता", "e": "🍜", "h": "नूडल्स"}, {"id": "i15", "n": "Bathing Soap", "u": "1 pc", "p": 35, "c": "Home & Cleaning / घर-सफाई", "e": "🧼", "h": "नहाने का साबुन"}, {"id": "i16", "n": "Detergent Powder", "u": "1 kg", "p": 110, "c": "Home & Cleaning / घर-सफाई", "e": "🧺", "h": "डिटर्जेंट पाउडर"}]}</script>
+<script id="app">
+var D=JSON.parse(document.getElementById('data').textContent),cart={},cat='Sab',q='',artifact=null,canEdit=false;
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function pic(i){return i.img?'<img src="'+esc(i.img)+'" alt="">':esc(i.e)}
+function th(i){return i.img?'<img class="th" src="'+esc(i.img)+'" alt="">':esc(i.e)}
+function readImg(f){return new Promise(function(res){if(!f)return res('');var r=new FileReader();r.onerror=function(){res('')};r.onload=function(){var im=new Image();im.onerror=function(){res('')};im.onload=function(){var k=Math.min(1,320/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};im.src=r.result};r.readAsDataURL(f)})}
+function lb(i){return i.n+(i.h?' / '+i.h:'')}
+function hn(i){return i.h?'<div class="nm hn">'+esc(i.h)+'</div>':''}
+function tot(){var t=0,c=0;D.items.forEach(function(i){var n=cart[i.id]||0;t+=n*i.p;c+=n});return{t:t,c:c}}
+function buildDoc(){
+ var st=$('#st').textContent,js=$('#app').textContent,d=JSON.stringify(D).replace(/</g,'\\u003c');
+ return '<!DOCTYPE html>\n<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>'+esc(D.shop)+'</title><style id="st">'+st+'</style></head><body><div id="root"></div><script type="application/json" id="data">'+d+'<\/script><script id="app">'+js+'<\/script></body></html>';
+}
+function shell(){
+ $('#root').innerHTML='<div class="hd"><div class="w"><h1>🛒 '+esc(D.shop)+'</h1><p>अन्नपूर्णा डेली नीड्स · घर की हर ज़रूरत, बस एक क्लिक दूर</p><input id="sq" placeholder="Search items · आइटम खोजें"></div></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="bar" id="bar"></div><button class="fab" id="fab" data-a="adm">⚙ Dukaan Manage</button><div class="mod" id="mod"><div class="sheet" id="sh"></div></div>';
+ $('#sq').oninput=function(){q=this.value.toLowerCase().trim();rGrid()};
+ rChips();rGrid();rBar();$('#fab').style.display=canEdit?'block':'none';
+}
+function rChips(){var a=['Sab'];D.items.forEach(function(i){if(a.indexOf(i.c)<0)a.push(i.c)});$('#chips').innerHTML=a.map(function(c){return '<button class="chip'+(c==cat?' on':'')+'" data-a="cat" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join('')}
+function rGrid(){
+ var L=D.items.filter(function(i){return (cat=='Sab'||i.c==cat)&&(i.n+' '+(i.h||'')).toLowerCase().indexOf(q)>=0});
+ $('#grid').innerHTML=L.length?L.map(function(i){var n=cart[i.id]||0;
+  return '<div class="card"><div class="pic">'+pic(i)+'</div><div class="nm">'+esc(i.n)+'</div>'+hn(i)+'<div class="mu">'+esc(i.u)+'</div><div class="row"><b>₹'+i.p+'</b>'+(n?'<div class="qty"><button data-a="m" data-id="'+i.id+'">−</button><span>'+n+'</span><button data-a="p" data-id="'+i.id+'">+</button></div>':'<button class="add" data-a="p" data-id="'+i.id+'">ADD</button>')+'</div></div>'}).join(''):'<p class="mu">No items found · कोई आइटम नहीं मिला</p>';
+}
+function rBar(){var t=tot(),b=$('#bar');b.style.display=t.c?'block':'none';b.innerHTML='<button data-a="cart"><span>'+t.c+' items · ₹'+t.t+'</span><span>View Cart · कार्ट देखें →</span></button>';$('#fab').style.bottom=t.c?'84px':'20px'}
+function rCart(){
+ var h='';D.items.forEach(function(i){var n=cart[i.id]||0;if(n)h+='<div class="ci"><div class="nm">'+th(i)+' '+esc(lb(i))+'<div class="mu">'+esc(i.u)+' · ₹'+i.p+'</div></div><div class="qty"><button data-a="m" data-id="'+i.id+'">−</button><span>'+n+'</span><button data-a="p" data-id="'+i.id+'">+</button></div><b>₹'+n*i.p+'</b></div>'});
+ var t=tot();if(!t.c){closeM();return}
+ $('#cl').innerHTML=h+'<div class="ci"><div class="nm">Total · कुल</div><b>₹'+t.t+'</b></div>';
+}
+function openCart(){
+ $('#sh').innerHTML='<h2>Your Cart · आपका कार्ट <button class="x" data-a="x">✕</button></h2><div id="cl"></div><h3>Delivery details · डिलीवरी जानकारी</h3><input id="cn" placeholder="Your name · आपका नाम"><input id="cp" type="tel" placeholder="Mobile number · मोबाइल नंबर"><textarea id="ca" rows="2" placeholder="Full address · पूरा पता"></textarea><button class="go" data-a="send">Order on WhatsApp · व्हाट्सएप पर ऑर्डर करें</button>';
+ $('#mod').style.display='flex';rCart();
+}
+function closeM(){$('#mod').style.display='none'}
+function send(){
+ var n=$('#cn').value.trim(),p=$('#cp').value.trim(),a=$('#ca').value.trim();
+ if(!n||!a){alert('Please enter name and address · कृपया नाम और पता भरें');return}
+ var m='*'+D.shop+' - Naya Order*\n\n';
+ D.items.forEach(function(i){var c=cart[i.id]||0;if(c)m+='• '+lb(i)+' ('+i.u+') x '+c+' = ₹'+c*i.p+'\n'});
+ m+='\n*Total: ₹'+tot().t+'*\n\nNaam: '+n+'\nMobile: '+p+'\nAddress: '+a;
+ window.open('https://wa.me/'+D.wa+'?text='+encodeURIComponent(m),'_blank');
+}
+function openAdm(){
+ var cs=[];D.items.forEach(function(i){if(cs.indexOf(i.c)<0)cs.push(i.c)});
+ $('#sh').innerHTML='<h2>Dukaan Manage <button class="x" data-a="x">✕</button></h2><div class="mu">Dukaan ka naam</div><input id="as" value="'+esc(D.shop)+'"><div class="mu">WhatsApp number (91 ke saath, bina +)</div><input id="aw" value="'+esc(D.wa)+'" inputmode="numeric"><h3>Naya item jodein</h3><div class="f2"><input id="an" placeholder="English name (Potato)"><input id="ah" placeholder="हिंदी नाम (आलू)"><input id="au" placeholder="Matra (1 kg)"><input id="ap" type="number" placeholder="Daam ₹"><input id="ae" placeholder="Emoji (🛒)"></div><input id="ac" list="cl2" placeholder="Category" style="margin-top:8px"><div class="mu">Photo (zaroori nahi, gallery ya camera se)</div><input id="af" type="file" accept="image/*"><datalist id="cl2">'+cs.map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist><button class="sm" data-a="add">+ Item jodein</button><div class="mu" style="margin-top:8px">Items badal kar neeche Save &amp; Publish dabayein.</div><h3>Sabhi items</h3><div id="al"></div><div class="mu" id="am"></div><h3>Auto update (GitHub)</h3><div class="mu">GitHub username</div><input id="gho" autocapitalize="off"><div class="mu">Repository naam</div><input id="ghr" autocapitalize="off"><div class="mu">GitHub token (sirf is device mein save hota hai, kisi ko na dein)</div><input id="ght" type="password" autocomplete="off"><button class="go" data-a="save">Save &amp; Publish (sabke liye live)</button><button class="sm" data-a="dl" style="margin-top:8px">Sirf file download karein</button>';
+ $('#mod').style.display='flex';rAl();
+ var hp=location.hostname.match(/^(.+)\.github\.io$/),seg=location.pathname.split('/')[1]||'';
+ $('#gho').value=ls('gho')||(hp?hp[1]:'');$('#ghr').value=ls('ghr')||(hp?(seg||hp[0]):'');$('#ght').value=ls('ght');
+}
+function rAl(){$('#al').innerHTML=D.items.map(function(i){return '<div class="ci"><div class="nm">'+th(i)+' '+esc(lb(i))+'<div class="mu">'+esc(i.c)+' · '+esc(i.u)+' · ₹'+i.p+'</div></div><button class="del" data-a="del" data-id="'+i.id+'">🗑</button></div>'}).join('')}
+async function addItem(){
+ var n=$('#an').value.trim(),p=parseFloat($('#ap').value);
+ if(!n||!(p>=0)){$('#am').textContent='Naam aur daam zaroori hai.';return}
+ $('#am').textContent='Jod raha hoon...';
+ var img=await readImg($('#af').files[0]);
+ var it={id:'i'+Date.now(),n:n,h:$('#ah').value.trim(),u:$('#au').value.trim(),p:p,c:$('#ac').value.trim()||'Anya',e:$('#ae').value.trim()||'🛒'};
+ if(img)it.img=img;D.items.push(it);
+ ['an','ah','au','ap','ae','af'].forEach(function(k){$('#'+k).value=''});
+ $('#am').textContent='Jud gaya. Sab items jodne ke baad neeche Download dabayein.';rAl();rChips();rGrid();
+}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v)}catch(e){return ''}}
+function b64(t){var b=new TextEncoder().encode(t),r='';for(var i=0;i<b.length;i+=8192)r+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(r)}
+function apply(){D.shop=$('#as').value.trim()||D.shop;D.wa=$('#aw').value.replace(/\D/g,'')||D.wa}
+function dl(){
+ apply();
+ var bl=new Blob([buildDoc()],{type:'text/html'}),l=document.createElement('a');
+ l.href=URL.createObjectURL(bl);l.download='index.html';document.body.appendChild(l);l.click();l.remove();
+ $('#am').textContent='index.html download ho gayi.';
+}
+async function save(){
+ apply();var m=$('#am'),o=$('#gho').value.trim(),r=$('#ghr').value.trim(),t=$('#ght').value.trim();
+ if(!o||!r||!t){m.textContent='GitHub username, repository aur token teeno bharein.';return}
+ ls('gho',o);ls('ghr',r);ls('ght',t);
+ var api='https://api.github.com/repos/'+encodeURIComponent(o)+'/'+encodeURIComponent(r)+'/contents/index.html';
+ var h={'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json'};
+ try{
+  m.textContent='Save ho raha hai...';
+  var g=await fetch(api,{headers:h});
+  if(g.status==401){m.textContent='Token galat ya expire ho gaya hai.';return}
+  if(g.status==404){m.textContent='Repository nahi mili ya token ko is repository ka access nahi hai.';return}
+  if(!g.ok){m.textContent='GitHub error: '+g.status;return}
+  var sha=(await g.json()).sha;
+  var p=await fetch(api,{method:'PUT',headers:h,body:JSON.stringify({message:'Update items',content:b64(buildDoc()),sha:sha})});
+  if(p.ok){m.textContent='Ho gaya! 1-2 minute mein sabke liye page update ho jayega (kabhi 10 minute bhi lag sakte hain).'}
+  else if(p.status==403){m.textContent='Token ko Contents: Read and write ki permission nahi hai.'}
+  else if(p.status==409||p.status==422){m.textContent='Takkar hui, page refresh karke dobara try karein.'}
+  else{m.textContent='GitHub error: '+p.status}
+ }catch(e){m.textContent='Internet ya network ki dikkat. Dobara try karein.'}
+}
+document.addEventListener('click',function(e){
+ var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a,id=b.dataset.id;
+ if(a=='p'||a=='m'){cart[id]=Math.max(0,(cart[id]||0)+(a=='p'?1:-1));rGrid();rBar();if($('#cl'))rCart()}
+ else if(a=='cat'){cat=b.dataset.c;rChips();rGrid()}
+ else if(a=='cart')openCart();else if(a=='x')closeM();else if(a=='send')send();
+ else if(a=='adm')openAdm();else if(a=='add')addItem();else if(a=='save')save();else if(a=='dl')dl();
+ else if(a=='del'){D.items=D.items.filter(function(i){return i.id!=id});rAl();rChips();rGrid()}
+});
+function chk(){canEdit=location.hash=='#admin';$('#fab').style.display=canEdit?'block':'none'}
+shell();chk();window.addEventListener('hashchange',chk);
+</script>
+</body></html>
