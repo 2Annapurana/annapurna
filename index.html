@@ -58,7 +58,7 @@ function buildDoc(){
  return '<!DOCTYPE html>\n<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>'+esc(D.shop)+'</title><style id="st">'+st+'</style></head><body><div id="root"></div><script type="application/json" id="data">'+d+'<\/script><script id="app">'+js+'<\/script></body></html>';
 }
 function shell(){
- $('#root').innerHTML='<div class="hd"><div class="w"><h1 id="hs">🛒 '+esc(D.shop)+'</h1><p>अन्नपूर्णा डेली नीड्स · घर की हर ज़रूरत, बस एक क्लिक दूर</p><input id="sq" placeholder="Search items · आइटम खोजें"></div></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="bar" id="bar"></div><button class="fab" id="fab" data-a="adm">⚙ Dukaan Manage</button><div class="mod" id="mod"><div class="sheet" id="sh"></div></div>';
+ $('#root').innerHTML='<div class="hd"><div class="w"><h1 id="hs">🛒 '+esc(D.shop)+'</h1><p>अन्नपूर्णा डेली नीड्स · घर की हर ज़रूरत, बस एक क्लिक दूर</p><input id="sq" placeholder="Search items · आइटम खोजें"></div></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="bar" id="bar"></div><button class="fab" id="fab" data-a="rud">⚙ Dukaan Manage</button><div class="mod" id="mod"><div class="sheet" id="sh"></div></div>';
  $('#sq').oninput=function(){q=this.value.toLowerCase().trim();rGrid()};
  rChips();rGrid();rBar();$('#fab').style.display=canEdit?'block':'none';
 }
@@ -89,7 +89,7 @@ function send(){
 }
 var atab='items',edit=null,flt='',dirty=false;
 function dty(){dirty=true;var e=$('#dt');if(e)e.textContent=' • save nahi hua'}
-function openAdm(){
+function openRud(){
  $('#sh').innerHTML='<h2><span>Dukaan Manage<small id="dt" class="mu">'+(dirty?' • save nahi hua':'')+'</small></span><button class="x" data-a="x">✕</button></h2><div class="tabs">'+[['items','Items'],['cats','Categories'],['set','Settings'],['pub','Publish']].map(function(t){return '<button class="chip'+(t[0]==atab?' on':'')+'" data-a="tab" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div><div id="ab"></div><div class="mu" id="am"></div>';
  $('#mod').style.display='flex';rAb();
 }
@@ -173,7 +173,7 @@ document.addEventListener('click',function(e){
  if(a=='p'||a=='m'){var it=D.items.filter(function(i){return i.id==id})[0];if(a=='p'&&it&&it.o)return;cart[id]=Math.max(0,(cart[id]||0)+(a=='p'?1:-1));rGrid();rBar();if($('#cl'))rCart()}
  else if(a=='cat'){cat=b.dataset.c;rChips();rGrid()}
  else if(a=='cart')openCart();else if(a=='x')closeM();else if(a=='send')send();
- else if(a=='adm')openAdm();else if(a=='tab'){atab=b.dataset.t;openAdm()}
+ else if(a=='rud')openRud();else if(a=='tab'){atab=b.dataset.t;openRud()}
  else if(a=='add')saveItem(false);else if(a=='upd')saveItem(true);else if(a=='cancel'){edit=null;rAb()}
  else if(a=='ed'){edit=id;atab='items';rAb();$('#sh').scrollTop=0}
  else if(a=='stk'){var s2=D.items.filter(function(i){return i.id==id})[0];if(s2){s2.o=!s2.o;dty();rAl();rGrid()}}
