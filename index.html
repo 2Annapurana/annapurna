@@ -11,7 +11,7 @@ body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-
 .hd{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;padding:calc(18px + env(safe-area-inset-top,0px)) 16px 18px}
 .w{max-width:720px;margin:auto}
 .hd h1{margin:0;font-size:22px}.hd p{margin:3px 0 12px;opacity:.9;font-size:13px}
-input,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--cd);color:var(--tx);font:inherit;margin-bottom:8px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--cd);color:var(--tx);font:inherit;margin-bottom:8px}
 .hd input{border:0;margin:0}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;max-width:720px;margin:auto}
 .chip{flex:none;padding:7px 14px;border-radius:20px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);font-size:14px;cursor:pointer}
@@ -22,6 +22,7 @@ input,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-ra
 .pic{background:var(--tile);border-radius:10px;height:84px;display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:4px}
 .pic{overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.th{width:34px;height:34px;border-radius:8px;object-fit:cover;vertical-align:middle}
 .hn{font-weight:500;color:var(--mu);font-size:13px}
+.oos{opacity:.55}.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:6px}.ci input.pr{padding:7px}
 .nm{font-weight:600;font-size:14px;line-height:1.25}.mu{color:var(--mu);font-size:12px}
 .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .add{border:1.5px solid var(--g);color:var(--g);background:transparent;border-radius:8px;padding:5px 16px;font-weight:700;font-size:13px;cursor:pointer}
@@ -51,72 +52,137 @@ function th(i){return i.img?'<img class="th" src="'+esc(i.img)+'" alt="">':esc(i
 function readImg(f){return new Promise(function(res){if(!f)return res('');var r=new FileReader();r.onerror=function(){res('')};r.onload=function(){var im=new Image();im.onerror=function(){res('')};im.onload=function(){var k=Math.min(1,320/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};im.src=r.result};r.readAsDataURL(f)})}
 function lb(i){return i.n+(i.h?' / '+i.h:'')}
 function hn(i){return i.h?'<div class="nm hn">'+esc(i.h)+'</div>':''}
-function tot(){var t=0,c=0;D.items.forEach(function(i){var n=cart[i.id]||0;t+=n*i.p;c+=n});return{t:t,c:c}}
+function tot(){var t=0,c=0;D.items.forEach(function(i){var n=cart[i.id]||0;t+=n*i.p;c+=n});var d=c?(D.dc||0):0;return{t:t,c:c,d:d,g:t+d}}
 function buildDoc(){
  var st=$('#st').textContent,js=$('#app').textContent,d=JSON.stringify(D).replace(/</g,'\\u003c');
  return '<!DOCTYPE html>\n<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>'+esc(D.shop)+'</title><style id="st">'+st+'</style></head><body><div id="root"></div><script type="application/json" id="data">'+d+'<\/script><script id="app">'+js+'<\/script></body></html>';
 }
 function shell(){
- $('#root').innerHTML='<div class="hd"><div class="w"><h1>🛒 '+esc(D.shop)+'</h1><p>अन्नपूर्णा डेली नीड्स · घर की हर ज़रूरत, बस एक क्लिक दूर</p><input id="sq" placeholder="Search items · आइटम खोजें"></div></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="bar" id="bar"></div><button class="fab" id="fab" data-a="adm">⚙ Dukaan Manage</button><div class="mod" id="mod"><div class="sheet" id="sh"></div></div>';
+ $('#root').innerHTML='<div class="hd"><div class="w"><h1 id="hs">🛒 '+esc(D.shop)+'</h1><p>अन्नपूर्णा डेली नीड्स · घर की हर ज़रूरत, बस एक क्लिक दूर</p><input id="sq" placeholder="Search items · आइटम खोजें"></div></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="bar" id="bar"></div><button class="fab" id="fab" data-a="adm">⚙ Dukaan Manage</button><div class="mod" id="mod"><div class="sheet" id="sh"></div></div>';
  $('#sq').oninput=function(){q=this.value.toLowerCase().trim();rGrid()};
  rChips();rGrid();rBar();$('#fab').style.display=canEdit?'block':'none';
 }
-function rChips(){var a=['Sab'];D.items.forEach(function(i){if(a.indexOf(i.c)<0)a.push(i.c)});$('#chips').innerHTML=a.map(function(c){return '<button class="chip'+(c==cat?' on':'')+'" data-a="cat" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join('')}
+function rChips(){var a=['Sab'].concat(D.cats.filter(function(c){return D.items.some(function(i){return i.c==c})}));$('#chips').innerHTML=a.map(function(c){return '<button class="chip'+(c==cat?' on':'')+'" data-a="cat" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join('')}
 function rGrid(){
  var L=D.items.filter(function(i){return (cat=='Sab'||i.c==cat)&&(i.n+' '+(i.h||'')).toLowerCase().indexOf(q)>=0});
  $('#grid').innerHTML=L.length?L.map(function(i){var n=cart[i.id]||0;
-  return '<div class="card"><div class="pic">'+pic(i)+'</div><div class="nm">'+esc(i.n)+'</div>'+hn(i)+'<div class="mu">'+esc(i.u)+'</div><div class="row"><b>₹'+i.p+'</b>'+(n?'<div class="qty"><button data-a="m" data-id="'+i.id+'">−</button><span>'+n+'</span><button data-a="p" data-id="'+i.id+'">+</button></div>':'<button class="add" data-a="p" data-id="'+i.id+'">ADD</button>')+'</div></div>'}).join(''):'<p class="mu">No items found · कोई आइटम नहीं मिला</p>';
+  return '<div class="card'+(i.o?' oos':'')+'"><div class="pic">'+pic(i)+'</div><div class="nm">'+esc(i.n)+'</div>'+hn(i)+'<div class="mu">'+esc(i.u)+'</div><div class="row"><b>₹'+i.p+'</b>'+(n?'<div class="qty"><button data-a="m" data-id="'+i.id+'">−</button><span>'+n+'</span><button data-a="p" data-id="'+i.id+'">+</button></div>':(i.o?'<span class="mu">Out of stock · खत्म</span>':'<button class="add" data-a="p" data-id="'+i.id+'">ADD</button>'))+'</div></div>'}).join(''):'<p class="mu">No items found · कोई आइटम नहीं मिला</p>';
 }
 function rBar(){var t=tot(),b=$('#bar');b.style.display=t.c?'block':'none';b.innerHTML='<button data-a="cart"><span>'+t.c+' items · ₹'+t.t+'</span><span>View Cart · कार्ट देखें →</span></button>';$('#fab').style.bottom=t.c?'84px':'20px'}
 function rCart(){
  var h='';D.items.forEach(function(i){var n=cart[i.id]||0;if(n)h+='<div class="ci"><div class="nm">'+th(i)+' '+esc(lb(i))+'<div class="mu">'+esc(i.u)+' · ₹'+i.p+'</div></div><div class="qty"><button data-a="m" data-id="'+i.id+'">−</button><span>'+n+'</span><button data-a="p" data-id="'+i.id+'">+</button></div><b>₹'+n*i.p+'</b></div>'});
  var t=tot();if(!t.c){closeM();return}
- $('#cl').innerHTML=h+'<div class="ci"><div class="nm">Total · कुल</div><b>₹'+t.t+'</b></div>';
+ $('#cl').innerHTML=h+(t.d?'<div class="ci"><div class="nm">Delivery · डिलीवरी</div><b>₹'+t.d+'</b></div>':'')+'<div class="ci"><div class="nm">Total · कुल</div><b>₹'+t.g+'</b></div>'+(D.mo&&t.t<D.mo?'<p style="color:#d33">Minimum order ₹'+D.mo+' hai (₹'+(D.mo-t.t)+' aur chahiye) · न्यूनतम ऑर्डर ₹'+D.mo+'</p>':'');
 }
 function openCart(){
  $('#sh').innerHTML='<h2>Your Cart · आपका कार्ट <button class="x" data-a="x">✕</button></h2><div id="cl"></div><h3>Delivery details · डिलीवरी जानकारी</h3><input id="cn" placeholder="Your name · आपका नाम"><input id="cp" type="tel" placeholder="Mobile number · मोबाइल नंबर"><textarea id="ca" rows="2" placeholder="Full address · पूरा पता"></textarea><button class="go" data-a="send">Order on WhatsApp · व्हाट्सएप पर ऑर्डर करें</button>';
  $('#mod').style.display='flex';rCart();
 }
-function closeM(){$('#mod').style.display='none'}
+function closeM(){$('#mod').style.display='none';if($('#hs'))$('#hs').textContent='🛒 '+D.shop}
 function send(){
  var n=$('#cn').value.trim(),p=$('#cp').value.trim(),a=$('#ca').value.trim();
  if(!n||!a){alert('Please enter name and address · कृपया नाम और पता भरें');return}
  var m='*'+D.shop+' - Naya Order*\n\n';
  D.items.forEach(function(i){var c=cart[i.id]||0;if(c)m+='• '+lb(i)+' ('+i.u+') x '+c+' = ₹'+c*i.p+'\n'});
- m+='\n*Total: ₹'+tot().t+'*\n\nNaam: '+n+'\nMobile: '+p+'\nAddress: '+a;
+ var t=tot();if(D.mo&&t.t<D.mo){alert('Minimum order ₹'+D.mo);return}m+=(t.d?'\nDelivery: ₹'+t.d:'')+'\n*Total: ₹'+t.g+'*\n\nNaam: '+n+'\nMobile: '+p+'\nAddress: '+a;
  window.open('https://wa.me/'+D.wa+'?text='+encodeURIComponent(m),'_blank');
 }
+var atab='items',edit=null,flt='',dirty=false;
+function dty(){dirty=true;var e=$('#dt');if(e)e.textContent=' • save nahi hua'}
 function openAdm(){
- var cs=[];D.items.forEach(function(i){if(cs.indexOf(i.c)<0)cs.push(i.c)});
- $('#sh').innerHTML='<h2>Dukaan Manage <button class="x" data-a="x">✕</button></h2><div class="mu">Dukaan ka naam</div><input id="as" value="'+esc(D.shop)+'"><div class="mu">WhatsApp number (91 ke saath, bina +)</div><input id="aw" value="'+esc(D.wa)+'" inputmode="numeric"><h3>Naya item jodein</h3><div class="f2"><input id="an" placeholder="English name (Potato)"><input id="ah" placeholder="हिंदी नाम (आलू)"><input id="au" placeholder="Matra (1 kg)"><input id="ap" type="number" placeholder="Daam ₹"><input id="ae" placeholder="Emoji (🛒)"></div><input id="ac" list="cl2" placeholder="Category" style="margin-top:8px"><div class="mu">Photo (zaroori nahi, gallery ya camera se)</div><input id="af" type="file" accept="image/*"><datalist id="cl2">'+cs.map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist><button class="sm" data-a="add">+ Item jodein</button><div class="mu" style="margin-top:8px">Badlav tabhi sabko dikhenge jab aap download hui index.html ko hosting par dobara upload karenge.</div><h3>Sabhi items</h3><div id="al"></div><div class="mu" id="am"></div><button class="go" data-a="save">Download updated page (index.html)</button>';
- $('#mod').style.display='flex';rAl();
+ $('#sh').innerHTML='<h2><span>Dukaan Manage<small id="dt" class="mu">'+(dirty?' • save nahi hua':'')+'</small></span><button class="x" data-a="x">✕</button></h2><div class="tabs">'+[['items','Items'],['cats','Categories'],['set','Settings'],['pub','Publish']].map(function(t){return '<button class="chip'+(t[0]==atab?' on':'')+'" data-a="tab" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div><div id="ab"></div><div class="mu" id="am"></div>';
+ $('#mod').style.display='flex';rAb();
 }
-function rAl(){$('#al').innerHTML=D.items.map(function(i){return '<div class="ci"><div class="nm">'+th(i)+' '+esc(lb(i))+'<div class="mu">'+esc(i.c)+' · '+esc(i.u)+' · ₹'+i.p+'</div></div><button class="del" data-a="del" data-id="'+i.id+'">🗑</button></div>'}).join('')}
-async function addItem(){
- var n=$('#an').value.trim(),p=parseFloat($('#ap').value);
- if(!n||!(p>=0)){$('#am').textContent='Naam aur daam zaroori hai.';return}
- $('#am').textContent='Jod raha hoon...';
- var img=await readImg($('#af').files[0]);
- var it={id:'i'+Date.now(),n:n,h:$('#ah').value.trim(),u:$('#au').value.trim(),p:p,c:$('#ac').value.trim()||'Anya',e:$('#ae').value.trim()||'🛒'};
- if(img)it.img=img;D.items.push(it);
- ['an','ah','au','ap','ae','af'].forEach(function(k){$('#'+k).value=''});
- $('#am').textContent='Jud gaya. Sab items jodne ke baad neeche Download dabayein.';rAl();rChips();rGrid();
+function rAb(){
+ var h='';
+ if(atab=='items'){
+  var it=edit&&D.items.filter(function(i){return i.id==edit})[0]||{};
+  h='<h3>'+(edit?'Item edit karein':'Naya item jodein')+'</h3><div class="f2"><input id="an" placeholder="English name (Potato)" value="'+esc(it.n||'')+'"><input id="ah" placeholder="हिंदी नाम (आलू)" value="'+esc(it.h||'')+'"><input id="au" placeholder="Matra (1 kg)" value="'+esc(it.u||'')+'"><input id="ap" type="number" placeholder="Rate ₹" value="'+(it.p===undefined?'':it.p)+'"><input id="ae" placeholder="Emoji (🛒)" value="'+esc(it.e||'')+'"><select id="ac">'+D.cats.map(function(c){return '<option'+(c==it.c?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select></div><div class="mu" style="margin-top:8px">Photo (zaroori nahi)'+(it.img?' · <label><input type="checkbox" id="rp" style="width:auto;margin:0"> photo hatayein</label>':'')+'</div><input id="af" type="file" accept="image/*">'+(edit?'<button class="sm" data-a="upd">Update karein</button> <button class="sm" data-a="cancel" style="background:var(--mu)">Cancel</button>':'<button class="sm" data-a="add">+ Item jodein</button>')+'<h3>Sabhi items (rate seedha badal sakte hain)</h3><input id="fl" placeholder="Item dhundhein" value="'+esc(flt)+'"><div id="al"></div>';
+ }else if(atab=='cats'){
+  h='<h3>Category jodein</h3><div class="f2"><input id="ncn" placeholder="English (Dairy)"><input id="nch" placeholder="हिंदी (डेयरी)"></div><button class="sm" data-a="addc" style="margin-top:8px">+ Category jodein</button><h3>Categories</h3><div class="mu">Naam badalne ke liye likhein aur bahar tap karein.</div><div id="cl3"></div>';
+ }else if(atab=='set'){
+  h='<h3>Dukaan ki settings</h3><div class="mu">Dukaan ka naam</div><input data-k="shop" value="'+esc(D.shop)+'"><div class="mu">WhatsApp number (91 ke saath, bina +)</div><input data-k="wa" inputmode="numeric" value="'+esc(D.wa)+'"><div class="mu">Delivery charge ₹ (0 = free)</div><input data-k="dc" data-t="n" type="number" value="'+(D.dc||0)+'"><div class="mu">Minimum order ₹ (0 = koi nahi)</div><input data-k="mo" data-t="n" type="number" value="'+(D.mo||0)+'">';
+ }else{
+  h='<h3>Live karein (GitHub)</h3><div class="mu">GitHub username</div><input id="gho" autocapitalize="off"><div class="mu">Repository naam</div><input id="ghr" autocapitalize="off"><div class="mu">GitHub token (sirf is device mein save hota hai, kisi ko na dein)</div><input id="ght" type="password" autocomplete="off"><button class="go" data-a="save">Save &amp; Publish (sabke liye live)</button><button class="sm" data-a="dl" style="margin-top:8px">Sirf file download karein</button>';
+ }
+ $('#ab').innerHTML=h;
+ if(atab=='items')rAl();if(atab=='cats')rCl();
+ if(atab=='pub'){var hp=location.hostname.match(/^(.+)\.github\.io$/),sg=location.pathname.split('/')[1]||'';$('#gho').value=ls('gho')||(hp?hp[1]:'');$('#ghr').value=ls('ghr')||(hp?(sg||hp[0]):'');$('#ght').value=ls('ght')}
 }
-function save(){
- D.shop=$('#as').value.trim()||D.shop;D.wa=$('#aw').value.replace(/\D/g,'')||D.wa;
+function rAl(){var f=flt.toLowerCase();$('#al').innerHTML=D.items.filter(function(i){return (i.n+' '+(i.h||'')).toLowerCase().indexOf(f)>=0}).map(function(i){return '<div class="ci" style="flex-wrap:wrap"><div class="nm" style="flex:1 1 100%">'+th(i)+' '+esc(lb(i))+'<div class="mu">'+esc(i.c)+' · '+esc(i.u)+'</div></div>₹<input class="pr" type="number" data-pr="'+i.id+'" value="'+i.p+'" style="width:84px;margin:0"><button class="sm" data-a="stk" data-id="'+i.id+'" style="'+(i.o?'background:#c44':'')+'">'+(i.o?'Out of stock':'In stock')+'</button><button class="x" data-a="ed" data-id="'+i.id+'">✏️</button><button class="del" data-a="del" data-id="'+i.id+'">🗑</button></div>'}).join('')}
+function rCl(){$('#cl3').innerHTML=D.cats.map(function(c){var n=D.items.filter(function(i){return i.c==c}).length;return '<div class="ci"><input data-cat="'+esc(c)+'" value="'+esc(c)+'" style="margin:0"><span class="mu">'+n+' items</span><button class="del" data-a="delc" data-c="'+esc(c)+'">🗑</button></div>'}).join('')}
+async function saveItem(upd){
+ var m=$('#am'),n=$('#an').value.trim(),p=parseFloat($('#ap').value);
+ if(!n||!(p>=0)){m.textContent='Naam aur rate zaroori hai.';return}
+ m.textContent='Ruko...';var img=await readImg($('#af').files[0]),it;
+ if(upd){it=D.items.filter(function(i){return i.id==edit})[0];if(!it)return}else{it={id:'i'+Date.now()};D.items.push(it)}
+ it.n=n;it.h=$('#ah').value.trim();it.u=$('#au').value.trim();it.p=p;it.e=$('#ae').value.trim()||'🛒';it.c=$('#ac').value;
+ if(img)it.img=img;else if($('#rp')&&$('#rp').checked)delete it.img;
+ edit=null;dty();rAb();rChips();rGrid();$('#am').textContent=upd?'Update ho gaya.':'Jud gaya.';
+}
+function addCat(){
+ var en=$('#ncn').value.trim(),hi=$('#nch').value.trim(),nm=hi?en+' / '+hi:en;
+ if(!en){$('#am').textContent='English naam likhein.';return}
+ if(D.cats.indexOf(nm)>=0){$('#am').textContent='Ye category pehle se hai.';return}
+ D.cats.push(nm);dty();$('#ncn').value='';$('#nch').value='';$('#am').textContent='Category jud gayi. Ab Items mein usme item jodein.';rCl();
+}
+function delCat(c){
+ if(D.items.some(function(i){return i.c==c})){$('#am').textContent='Is category mein items hain. Pehle unhe hatayein ya doosri category mein daalein.';return}
+ D.cats=D.cats.filter(function(x){return x!=c});dty();rCl();rChips();
+}
+document.addEventListener('input',function(e){var t=e.target;
+ if(t.dataset.pr){var i=D.items.filter(function(x){return x.id==t.dataset.pr})[0];if(i){i.p=Math.max(0,parseFloat(t.value)||0);dty();rGrid();rBar()}}
+ else if(t.dataset.k){var v=t.value;if(t.dataset.t=='n')v=Math.max(0,parseFloat(v)||0);if(t.dataset.k=='wa')v=v.replace(/\D/g,'');D[t.dataset.k]=v;dty()}
+ else if(t.id=='fl'){flt=t.value;rAl()}
+});
+document.addEventListener('change',function(e){var t=e.target;if(t.dataset.cat===undefined)return;var o=t.dataset.cat,n=t.value.trim();
+ if(!n||(n!=o&&D.cats.indexOf(n)>=0)){t.value=o;return}
+ D.cats[D.cats.indexOf(o)]=n;D.items.forEach(function(i){if(i.c==o)i.c=n});if(cat==o)cat=n;dty();rChips();rGrid();rCl();
+});
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v)}catch(e){return ''}}
+function b64(t){var b=new TextEncoder().encode(t),r='';for(var i=0;i<b.length;i+=8192)r+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(r)}
+function apply(){}
+function dl(){
+ apply();
  var bl=new Blob([buildDoc()],{type:'text/html'}),l=document.createElement('a');
  l.href=URL.createObjectURL(bl);l.download='index.html';document.body.appendChild(l);l.click();l.remove();
- $('#am').textContent='index.html download ho gayi. Ab ise hosting par dobara upload kar dein, tab sabke liye badlav dikhega.';
+ $('#am').textContent='index.html download ho gayi.';
+}
+async function save(){
+ apply();var m=$('#am'),o=$('#gho').value.trim(),r=$('#ghr').value.trim(),t=$('#ght').value.trim();
+ if(!o||!r||!t){m.textContent='GitHub username, repository aur token teeno bharein.';return}
+ ls('gho',o);ls('ghr',r);ls('ght',t);
+ var api='https://api.github.com/repos/'+encodeURIComponent(o)+'/'+encodeURIComponent(r)+'/contents/index.html';
+ var h={'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json'};
+ try{
+  m.textContent='Save ho raha hai...';
+  var g=await fetch(api,{headers:h});
+  if(g.status==401){m.textContent='Token galat ya expire ho gaya hai.';return}
+  if(g.status==404){m.textContent='Repository nahi mili ya token ko is repository ka access nahi hai.';return}
+  if(!g.ok){m.textContent='GitHub error: '+g.status;return}
+  var sha=(await g.json()).sha;
+  var p=await fetch(api,{method:'PUT',headers:h,body:JSON.stringify({message:'Update items',content:b64(buildDoc()),sha:sha})});
+  if(p.ok){dirty=false;m.textContent='Ho gaya! 1-2 minute mein sabke liye page update ho jayega (kabhi 10 minute bhi lag sakte hain).'}
+  else if(p.status==403){m.textContent='Token ko Contents: Read and write ki permission nahi hai.'}
+  else if(p.status==409||p.status==422){m.textContent='Takkar hui, page refresh karke dobara try karein.'}
+  else{m.textContent='GitHub error: '+p.status}
+ }catch(e){m.textContent='Internet ya network ki dikkat. Dobara try karein.'}
 }
 document.addEventListener('click',function(e){
  var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a,id=b.dataset.id;
- if(a=='p'||a=='m'){cart[id]=Math.max(0,(cart[id]||0)+(a=='p'?1:-1));rGrid();rBar();if($('#cl'))rCart()}
+ if(a=='p'||a=='m'){var it=D.items.filter(function(i){return i.id==id})[0];if(a=='p'&&it&&it.o)return;cart[id]=Math.max(0,(cart[id]||0)+(a=='p'?1:-1));rGrid();rBar();if($('#cl'))rCart()}
  else if(a=='cat'){cat=b.dataset.c;rChips();rGrid()}
  else if(a=='cart')openCart();else if(a=='x')closeM();else if(a=='send')send();
- else if(a=='adm')openAdm();else if(a=='add')addItem();else if(a=='save')save();
- else if(a=='del'){D.items=D.items.filter(function(i){return i.id!=id});rAl();rChips();rGrid()}
+ else if(a=='adm')openAdm();else if(a=='tab'){atab=b.dataset.t;openAdm()}
+ else if(a=='add')saveItem(false);else if(a=='upd')saveItem(true);else if(a=='cancel'){edit=null;rAb()}
+ else if(a=='ed'){edit=id;atab='items';rAb();$('#sh').scrollTop=0}
+ else if(a=='stk'){var s2=D.items.filter(function(i){return i.id==id})[0];if(s2){s2.o=!s2.o;dty();rAl();rGrid()}}
+ else if(a=='del'){if(confirm('Ye item hatayein?')){D.items=D.items.filter(function(i){return i.id!=id});dty();rAl();rChips();rGrid()}}
+ else if(a=='addc')addCat();else if(a=='delc')delCat(b.dataset.c);
+ else if(a=='save')save();else if(a=='dl')dl();
 });
 function chk(){canEdit=location.hash=='#admin';$('#fab').style.display=canEdit?'block':'none'}
+if(!D.cats)D.cats=[];D.items.forEach(function(i){if(D.cats.indexOf(i.c)<0)D.cats.push(i.c)});
 shell();chk();window.addEventListener('hashchange',chk);
 </script>
 </body></html>
